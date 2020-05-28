@@ -37,7 +37,7 @@ public class ResponsavelPelaApuracaoTest {
   }
 
   [Test]
-  public void Cadastrar() {
+  public void ShouldReturnASuccessCreateMessage() {
     wait = new WebDriverWait(driver, new TimeSpan(0, 5, 0));
     wait.IgnoreExceptionTypes(typeof(NoSuchElementException),typeof(InvalidOperationException));
 
