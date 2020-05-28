@@ -69,10 +69,10 @@ public class ResponsavelPelaApuracaoTest {
     driver.FindElement(By.Id("idButtonSalvar")).Click();
 
     wait.Until(e => e.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]")));
-    var resultadoAtual = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]")).Text;
-    var resultadoEsperado = "Cadastro realizado com sucesso!";
+    var actualResult = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]")).Text;
+    var expectedResult = "Cadastro realizado com sucesso!";
 
-    StringAssert.AreEqualIgnoringCase(resultadoEsperado , resultadoAtual);
+    StringAssert.AreEqualIgnoringCase(expectedResult , actualResult);
 
   }
 }
