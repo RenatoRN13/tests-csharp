@@ -42,7 +42,6 @@ public class ResponsavelPelaApuracaoTest {
     wait.IgnoreExceptionTypes(typeof(NoSuchElementException),typeof(InvalidOperationException));
 
     driver.Navigate().GoToUrl("http://eapresfeature.tce.govrn/");
-    driver.Manage().Window.Size = new System.Drawing.Size(1869, 1057);
     driver.FindElement(By.Id("username")).Click();
     driver.FindElement(By.Id("username")).Click();
     {
