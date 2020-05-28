@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Application</name>
+    </assembly>
+    <members>
+        <member name="T:Api.Controllers.V1.ObrigacaoController">
+            <summary>
+            Obrigacao Controller without Access Control Layer
+            </summary>
+        </member>
+        <member name="M:Api.Controllers.V1.ObrigacaoController.GetAll(Services.ObrigacaoService)">
+            <summary>
+            GetAll Obrigacao
+            </summary>
+            <response code="200">list returned all Obrigacao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Api.Controllers.V1.ObrigacaoController.GetById(Services.ObrigacaoService,System.Int32)">
+            <summary>
+            Get Obrigacao By IdObrigacao
+            </summary>
+            <param name="service"></param>
+            <response code="200">list returned Obrigacao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Api.Controllers.V1.ObrigacaoController.Create(Services.ObrigacaoService,Domain.DTO.ObrigacaoDTO)">
+            <summary>
+            Cria uma nova Obrigacao usando um objeto do tipo ObrigacaoDTO. É possível cadastrar em lote um conjunto de Histórico de Periodicidade e de Histórico de Valor de Multa.
+            </summary>
+            <param name="obrigacaoDTO"></param>
+            <response code="201">created</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Api.Controllers.V1.ObrigacaoController.Update(Services.ObrigacaoService,Domain.DTO.ObrigacaoDTO,System.Int32)">
+            <summary>
+            Update a Obrigacao, using DTO (Data Transfer Object) mapped with Entitie.
+            </summary>
+            <param name="obrigacaoDTO"></param>
+            <param name="idObrigacao"></param>
+            <response code="200">success</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="T:Api.Controllers.V1.TipoObrigacaoController">
+            <summary>
+            Obrigacao Controller without Access Control Layer
+            </summary>
+        </member>
+        <member name="M:Api.Controllers.V1.TipoObrigacaoController.GetAll(Services.TipoObrigacaoService)">
+            <summary>
+            GetAll TipoObrigacao
+            </summary>
+            <response code="200">list returned all TipoObrigacao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+            <param name="loggerFactory"></param>
+        </member>
+        <member name="T:Application.Controllers.PendenciaController">
+            <summary>
+            Pendencia Controller without Access Control Layer
+            </summary>
+        </member>
+        <member name="M:Application.Controllers.PendenciaController.GetAll(Services.PendenciaService,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            GetAll Pendencia
+            </summary>
+            <param name="service"></param>
+            <param name="idSetor">Valor opcional para buscar pendências apenas de um setor</param>
+            <param name="idResponsavelApuracao">Valor opcional para buscar pendências de um Responsavel pela apuração</param>
+            <param name="idOrgao">Valor opcional para buscar pendências de um Órgão</param>
+            <param name="mes">Valor opcional para buscar pendências de um mês</param>
+            <param name="ano">Valor opcional para buscar pendências de um ano</param>
+            <param name="possuiDataInativacao">Valor opcional para buscar pendências inativas</param>
+            <param name="emAtraso">Valor opcional para buscar pendencias em atraso</param>
+            <param name="naoEntregue">Valor opcional para buscar pendencias não entregues</param>
+            <param name="possuiProcesso">Valor opcional para buscar pendências que possuem processo vinculado</param>
+            <param name="temInformacaoInicial">Valor opcional para buscar pendências com informacao inicial ja adicionada</param>
+            <param name="despachoDiretor">Valor opcional para buscar pendências com despacho já realizado pelo diretor</param>
+            <param name="revisarInformacaoTecnica">Valor opcional para buscar pendências com sugestoes de correcoes que nao tenham sido despachadas ainda</param>
+            <param name="semFiltroDeStatusDeAutuacao">Valor opcional para buscar pendências independente de status da autuacao</param>
+            <response code="200">list returned all Pendencia</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.PendenciaController.GetByIdAsync(Services.PendenciaService,System.Int32)">
+            <summary>
+            Get Pendencia By IdPendencia
+            </summary>
+            <param name="service"></param>
+            <param name="idPendencia"></param>
+            <response code="200">list returned ResponsavelApuracao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.PendenciaController.GetByPeriodo(Services.PendenciaService,System.Int32,System.Int32)">
+            <summary>
+            Get Pendencia By Periodo (mês e ano)
+            </summary>
+            <param name="service"></param>
+            <response code="200">list returned ResponsavelApuracao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.PendenciaController.Create(Services.PendenciaService,Domain.DTO.PendenciaDTO)">
+            <summary>
+            Create a new Pendencia, using DTO (Data Transfer Object) mapped with Entitie.
+            </summary>
+            <param name="pendenciaDto">O idResponsavelApuracao deve ser um registro válido da Entidade ResponsavelApuracao.</param>
+            <response code="201">created</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.PendenciaController.Update(Services.PendenciaService,Domain.DTO.PendenciaDTO,System.Int32)">
+            <summary>
+            Update a ResponsavelApuracao, using DTO (Data Transfer Object) mapped with Entitie.
+            </summary>
+            <param name="PendenciaDto">O idResponsavelApuracao deve ser um registro válido da Entidade ResponsavelApuracao.</param>
+            <param name="IdPendencia"></param>
+            <response code="200">success</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.PendenciaController.MonitoramentoPendenciasAsync(Services.PendenciaService,Domain.DTO.PendenciaMonitoramentoDTO)">
+            <summary>
+            Monitoramento para criação de novas Pendências
+            </summary>
+            <param name="pendenciaMonitoramentoDTO">Indica os parâmetros para criação de pendências.</param>
+            <response code="201">created</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="T:Application.Controllers.ResponsavelApuracaoController">
+            <summary>
+            ResponsavelApuracao Controller without Access Control Layer
+            </summary>
+        </member>
+        <member name="M:Application.Controllers.ResponsavelApuracaoController.GetAllWithNomeSetorNomeGrupoUnidadeJurisdicionada(Services.ResponsavelApuracaoService)">
+            <summary>
+            GetAll ResponsavelApuracao
+            </summary>
+            <response code="200">list returned all ResponsavelApuracao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.ResponsavelApuracaoController.GetById(Services.ResponsavelApuracaoService,System.Int32)">
+            <summary>
+            Get ResponsavelApuracao por ID
+            </summary>
+            <param name="service"></param>
+            <param name="id"></param>
+            <response code="200">list returned ResponsavelApuracao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.ResponsavelApuracaoController.GetByObrigacao(Services.ResponsavelApuracaoService,System.Int32)">
+            <summary>
+            Retorna um Responsavel Apuração de acordo com o ID de uma Obrigacao Informado
+            </summary>
+            <param name="service"></param>
+            <param name="IdObrigacao"></param>
+            <response code="200">list returned ResponsavelApuracao</response>
+            <response code="301">moved permanently</response>
+            <response code="304">not modified</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.ResponsavelApuracaoController.Create(Services.ResponsavelApuracaoService,Domain.DTO.ResponsavelApuracaoDTO)">
+            <summary>
+            Create a new ResponsavelApuracao, using DTO (Data Transfer Object) mapped with Entitie.
+            </summary>
+            <param name="ResponsavelApuracaoDto">O idObrigacao deve ser um registro válido da Entidade Obrigacao.</param>
+            <response code="201">created</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="500">internal error server</response>
+        </member>
+        <member name="M:Application.Controllers.ResponsavelApuracaoController.Update(Services.ResponsavelApuracaoService,Domain.DTO.ResponsavelApuracaoDTO,System.Int32)">
+            <summary>
+            Update a ResponsavelApuracao, using DTO (Data Transfer Object) mapped with Entitie.
+            </summary>
+            <param name="ResponsavelApuracaoDto">O idObrigacao deve ser um registro válido da Entidade Obrigacao.</param>
+            <param name="IdResponsavelApuracao"></param>
+            <response code="200">success</response>
+            <response code="400">incorrect request</response>
+            <response code="401">not authorized</response>
+            <response code="404">resource not found</response>
+            <response code="500">internal error server</response>
+        </member>
+    </members>
+</doc>
