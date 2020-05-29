@@ -11,8 +11,11 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+using SeleniumExtras;
+
 [TestFixture]
 public class ResponsavelPelaApuracaoTest {
+  
   
   private IWebDriver driver;
   private WebDriverWait wait;
@@ -38,7 +41,7 @@ public class ResponsavelPelaApuracaoTest {
 
   [Test]
   public void ShouldReturnASuccessCreateMessage() {
-    wait = new WebDriverWait(driver, new TimeSpan(0, 5, 0));
+    wait = new WebDriverWait(driver, new TimeSpan(0, 10, 0));
     wait.IgnoreExceptionTypes(typeof(NoSuchElementException),typeof(InvalidOperationException));
 
     driver.Navigate().GoToUrl("http://eapresfeature.tce.govrn/");
@@ -52,10 +55,18 @@ public class ResponsavelPelaApuracaoTest {
     driver.FindElement(By.Id("username")).SendKeys("054.762.524-36");
     driver.FindElement(By.Id("password")).SendKeys("dev@123");
     driver.FindElement(By.Id("idEntrarLogin")).Click();
-    driver.FindElement(By.LinkText("Cadastros")).Click();
-    driver.FindElement(By.Id("responsavelApuracao")).Click();
-    driver.FindElement(By.CssSelector(".btn-sm")).Click();
+    wait.Until(e => e.FindElement(By.LinkText("Cadastros"))).Click();
+    wait.Until(e => e.FindElement(By.Id("responsavelApuracao"))).Click();
+    
+    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
+    //ElementIsVisible(By.Id("content-section")));
 
+    // driver.wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='loading2'][contains(@style, 'display: none')]")));
+
+    wait.Until(e => e.FindElement(By.Id("botaoCadastrar")));
+
+    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-responsavelapuracao-list/section/h1/a"))).Click();
+// document.querySelector("#botaoCadastrar")
     driver.FindElement(By.Id("selectGrupoUnidadeJurisdicionada")).Click();
     wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-responsavelapuracao-form/div/div/form/fieldset/div[1]/div[1]/div/ng-select/ng-dropdown-panel/div/div[2]/div[2]/span"))).Click();
 
@@ -74,4 +85,6 @@ public class ResponsavelPelaApuracaoTest {
     StringAssert.AreEqualIgnoringCase(expectedResult , actualResult);
 
   }
+
+
 }

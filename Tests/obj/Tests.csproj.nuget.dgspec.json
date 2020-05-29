@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[6.1.0, )"
             },
+            "DotNetSeleniumExtras.WaitHelpers": {
+              "target": "Package",
+              "version": "[3.11.0, )"
+            },
             "MadMilkman.Docx": {
               "target": "Package",
               "version": "[1.0.0, )"
