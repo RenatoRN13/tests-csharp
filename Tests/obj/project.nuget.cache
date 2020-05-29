@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "gVsF+GXSWiJnq+X1wY0paS4oxeE3Em7NB/vFLH/yt6SQt3rpFNzeRW82ApNQRXIUd98JBrZ9bNDaay7vlq3kFA==",
+  "dgSpecHash": "1wT8Up6wk1t3GYzM9pEQ+jA//gZ6+msSpUBXdOz541G/M/iMr+vI17TRyHdq8QWXe7zeGwVj+TdmOHzwU/z4cQ==",
   "success": true,
   "projectFilePath": "/Users/fredazevedo/Projects/ui-tests-selenium-csharp/Tests/Tests.csproj",
   "expectedPackageFiles": [
     "/Users/fredazevedo/.nuget/packages/automapper/8.1.0/automapper.8.1.0.nupkg.sha512",
     "/Users/fredazevedo/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/6.1.0/automapper.extensions.microsoft.dependencyinjection.6.1.0.nupkg.sha512",
+    "/Users/fredazevedo/.nuget/packages/dotnetseleniumextras.waithelpers/3.11.0/dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
     "/Users/fredazevedo/.nuget/packages/madmilkman.docx/1.0.0/madmilkman.docx.1.0.0.nupkg.sha512",
     "/Users/fredazevedo/.nuget/packages/microsoft.codecoverage/16.0.1/microsoft.codecoverage.16.0.1.nupkg.sha512",
     "/Users/fredazevedo/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
