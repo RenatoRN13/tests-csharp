@@ -62,7 +62,7 @@ public class ProcessoTest {
     driver.FindElement(By.CssSelector(".odd:nth-child(1) .fa-file-text-o")).Click();
     driver.FindElement(By.CssSelector(".swal2-confirm")).Click();
     
-    var actualResult = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]")).Text;
+    var actualResult = driver.FindElement(By.CssSelector(".swal2-content")).Text;
     var expectedResult = "Processo protocolado com sucesso";
 
     StringAssert.AreEqualIgnoringCase(expectedResult , actualResult);
