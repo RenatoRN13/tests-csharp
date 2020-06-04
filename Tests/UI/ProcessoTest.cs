@@ -53,16 +53,16 @@ public class ProcessoTest {
 
     wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/section/div[2]/div/div[3]/form/div[1]/table/tbody/tr[1]/td[2]")));
 
-    driver.FindElement(By.Id("selectStatusAutuacao")).Click();
-    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/section/div[2]/div/div[2]/div/fieldset[2]/form/div/div[6]/ng-select/ng-dropdown-panel/div/div[2]/div[1]/span"))).Click();
+    wait.Until(e => e.FindElement(By.Id("selectStatusAutuacao"))).Click();
+    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/section/div[2]/div/div[2]/div/fieldset[2]/form/div/div[5]/ng-select/ng-dropdown-panel/div/div[2]/div[1]/span"))).Click();
 
     driver.FindElement(By.Id("botaoConsultarPendencia")).Click();
-
     wait.Until(e => e.FindElement(By.CssSelector(".odd:nth-child(1) .fa-file-text-o")));
     driver.FindElement(By.CssSelector(".odd:nth-child(1) .fa-file-text-o")).Click();
+
     driver.FindElement(By.CssSelector(".swal2-confirm")).Click();
     
-    var actualResult = driver.FindElement(By.CssSelector(".swal2-content")).Text;
+    var actualResult = wait.Until(e => e.FindElement(By.CssSelector(".swal2-html-container"))).Text;
     var expectedResult = "Processo protocolado com sucesso";
 
     StringAssert.AreEqualIgnoringCase(expectedResult , actualResult);
