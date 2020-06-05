@@ -112,10 +112,10 @@ public class PendenciaTest {
     var year = CurrentYear;
 
     driver.FindElement (By.Id ("idPeriodoBusca")).Click ();
-    driver.FindElement (By.XPath ($"//*[text()='{mes}']")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{month}']")).Click ();
 
     driver.FindElement (By.Id ("idAnoBusca")).Click ();
-    driver.FindElement (By.XPath ($"//*[text()='{ano}']")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{year}']")).Click ();
 
     driver.FindElement (By.Id ("idOrgaoBusca")).Click ();
     driver.FindElement (By.XPath ($"//*[text()='{Responsible}']")).Click ();
@@ -156,10 +156,10 @@ public class PendenciaTest {
     var year = CurrentYear;
 
     driver.FindElement (By.Id ("idPeriodoBusca")).Click ();
-    driver.FindElement (By.XPath ($"//*[text()='{mes}']")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{month}']")).Click ();
 
     driver.FindElement (By.Id ("idAnoBusca")).Click ();
-    driver.FindElement (By.XPath ($"//*[text()='{ano}']")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{year}']")).Click ();
 
     driver.FindElement (By.Id ("idOrgaoBusca")).Click ();
     driver.FindElement (By.XPath ($"//*[text()='{Responsible}']")).Click ();
@@ -167,7 +167,7 @@ public class PendenciaTest {
     driver.FindElement (By.Id ("botaoGerarPendencia")).Click ();
 
     wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
-    
+
     var actualResult = wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
     var expectedResult = "Não é possível gerar pendências para datas futuras.";
     StringAssert.AreEqualIgnoringCase (expectedResult, actualResult);
