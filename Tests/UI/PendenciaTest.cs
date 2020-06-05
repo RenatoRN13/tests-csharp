@@ -4,169 +4,232 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Interactions;
-using NUnit.Framework;
 [TestFixture]
 public class PendenciaTest {
   private IWebDriver driver;
   private WebDriverWait wait;
-  public IDictionary<string, object> vars {get; private set;}
+  public IDictionary<string, object> vars { get; private set; }
   private IJavaScriptExecutor js;
-  [SetUp]
-  public void SetUp() {
-    
-    driver = new ChromeDriver();
-    driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(120);
 
-    js = (IJavaScriptExecutor)driver;
-    vars = new Dictionary<string, object>();
-  }
-  [TearDown]
-  protected void TearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
-
-  [Test, Order(1)]
-  public void ShouldGeneratePendencias() {
-
-    wait = new WebDriverWait(driver, new TimeSpan(0, 5, 0));
-    wait.IgnoreExceptionTypes(typeof(NoSuchElementException),typeof(InvalidOperationException));
-
-    driver.Navigate().GoToUrl("http://eapresfeature.tce.govrn/");
-
-    driver.FindElement(By.Id("username")).Click();
-    driver.FindElement(By.Id("username")).SendKeys("054.762.524-36");
-    driver.FindElement(By.Id("password")).SendKeys("dev@123");
-    driver.FindElement(By.Id("idEntrarLogin")).Click();
-    driver.FindElement(By.LinkText("Monitoramento")).Click();
-    driver.FindElement(By.Id("pendencia")).Click();
-    {
-      var element = driver.FindElement(By.Id("pendencia"));
-      Actions builder = new Actions(driver);
-      builder.MoveToElement(element).Perform();
-    }
-
-    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-
-    var mes = "Abril";
-    var ano = "2020";
-    var responsavelApuracao = "Setor: DIRETORIA DE DESPESA COM PESSOAL | Obrigação: Siai DP | Grupo: Prefeitura Municipal";
-
-    driver.FindElement(By.Id("idPeriodoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{mes}']")).Click();
-
-    driver.FindElement(By.Id("idAnoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{ano}']")).Click();
-
-    driver.FindElement(By.Id("idOrgaoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{responsavelApuracao}']")).Click();
-
-    driver.FindElement(By.Id("botaoGerarPendencia")).Click();
-
-    wait.Until(e => e.FindElement(By.CssSelector(".swal2-title")).Text != "Gerando Pendências...");
-
-    var actualResult = wait.Until(e => e.FindElement(By.CssSelector(".swal2-title"))).Text;
-    var expectedResult = "Pendências Geradas com Sucesso";
-    StringAssert.AreEqualIgnoringCase(expectedResult , actualResult);
-
-  }
-
-  [Test, Order(2)]
-  public void ShouldReturnAnErrorMessageWhenInputValuesDoesNotHavePendencias() {
-
-    wait = new WebDriverWait(driver, new TimeSpan(0, 5, 0));
-    wait.IgnoreExceptionTypes(typeof(NoSuchElementException),typeof(InvalidOperationException));
-
-    driver.Navigate().GoToUrl("http://eapresfeature.tce.govrn/");
-
-    driver.FindElement(By.Id("username")).Click();
-    driver.FindElement(By.Id("username")).SendKeys("054.762.524-36");
-    driver.FindElement(By.Id("password")).SendKeys("dev@123");
-    driver.FindElement(By.Id("idEntrarLogin")).Click();
-    driver.FindElement(By.LinkText("Monitoramento")).Click();
-    driver.FindElement(By.Id("pendencia")).Click();
-    {
-      var element = driver.FindElement(By.Id("pendencia"));
-      Actions builder = new Actions(driver);
-      builder.MoveToElement(element).Perform();
-    }
-
-    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-
-    var mes = "Abril";
-    var ano = "2020";
-    var responsavelApuracao = "Setor: DIRETORIA DE DESPESA COM PESSOAL | Obrigação: Siai DP | Grupo: Prefeitura Municipal";
-
-    driver.FindElement(By.Id("idPeriodoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{mes}']")).Click();
-
-    driver.FindElement(By.Id("idAnoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{ano}']")).Click();
-
-    driver.FindElement(By.Id("idOrgaoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{responsavelApuracao}']")).Click();
-
-    driver.FindElement(By.Id("botaoGerarPendencia")).Click();
-
-    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
-    var actualResult = wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
-    var expectedResult = "Não há pendências a serem geradas desse grupo para essa obrigação no período informado!";
-    StringAssert.AreEqualIgnoringCase(expectedResult , actualResult);
-
-  }
-
-  [Test, Order(3)]
-  public void ShouldReturnAnErrorMessageWhenInputDateIsFuture() {
-
-    wait = new WebDriverWait(driver, new TimeSpan(0, 5, 0));
-    wait.IgnoreExceptionTypes(typeof(NoSuchElementException),typeof(InvalidOperationException));
-
-    driver.Navigate().GoToUrl("http://eapresfeature.tce.govrn/");
-
-    driver.FindElement(By.Id("username")).Click();
-    driver.FindElement(By.Id("username")).SendKeys("054.762.524-36");
-    driver.FindElement(By.Id("password")).SendKeys("dev@123");
-    driver.FindElement(By.Id("idEntrarLogin")).Click();
-    driver.FindElement(By.LinkText("Monitoramento")).Click();
-    driver.FindElement(By.Id("pendencia")).Click();
-    {
-      var element = driver.FindElement(By.Id("pendencia"));
-      Actions builder = new Actions(driver);
-      builder.MoveToElement(element).Perform();
-    }
-
-    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-
-    var mes = "Julho";
-    var ano = "2020";
-    var responsavelApuracao = "Setor: DIRETORIA DE DESPESA COM PESSOAL | Obrigação: Siai DP | Grupo: Prefeitura Municipal";
-
-    driver.FindElement(By.Id("idPeriodoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{mes}']")).Click();
-
-    driver.FindElement(By.Id("idAnoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{ano}']")).Click();
-
-    driver.FindElement(By.Id("idOrgaoBusca")).Click();
-    driver.FindElement(By.XPath($"//*[text()='{responsavelApuracao}']")).Click();
-
-    driver.FindElement(By.Id("botaoGerarPendencia")).Click();
-
-    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
-    var actualResult = wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
-    var expectedResult = "Não é possível gerar pendências para datas futuras.";
-    StringAssert.AreEqualIgnoringCase(expectedResult , actualResult);
-
-  }
-
+  // Datas for tests
+  DateTime CurrentDate = DateTime.Now;
   
+  int CurrentYear;
+  int CurrentMonth;
+  int CurrentDay;
+  string[] DescribedMonths;
+  string Responsible;
+
+  [SetUp]
+  public void SetUp () {
+
+    driver = new ChromeDriver ();
+    driver.Manage ().Timeouts ().ImplicitWait = TimeSpan.FromSeconds (120);
+
+    js = (IJavaScriptExecutor) driver;
+    vars = new Dictionary<string, object> ();
+
+    CurrentYear = CurrentDate.Year;
+    CurrentMonth = CurrentDate.Month;
+    CurrentDay = CurrentDate.Day;
+    DescribedMonths = new string[13] { "Zero", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
+    Responsible = "Setor: DIRETORIA DE DESPESA COM PESSOAL | Obrigação: Siai DP | Grupo: Prefeitura Municipal";
+  }
+
+  [TearDown]
+  protected void TearDown () {
+    driver.Quit ();
+    driver.Dispose ();
+  }
+
+  [Test, Order (1)]
+  public void ShouldGeneratePendencias () {
+
+    wait = new WebDriverWait (driver, new TimeSpan (0, 5, 0));
+    wait.IgnoreExceptionTypes (typeof (NoSuchElementException), typeof (InvalidOperationException));
+
+    driver.Navigate ().GoToUrl ("http://eapresfeature.tce.govrn/");
+
+    driver.FindElement (By.Id ("username")).Click ();
+    driver.FindElement (By.Id ("username")).SendKeys ("054.762.524-36");
+    driver.FindElement (By.Id ("password")).SendKeys ("dev@123");
+    driver.FindElement (By.Id ("idEntrarLogin")).Click ();
+    driver.FindElement (By.LinkText ("Monitoramento")).Click ();
+    driver.FindElement (By.Id ("pendencia")).Click (); {
+      var element = driver.FindElement (By.Id ("pendencia"));
+      Actions builder = new Actions (driver);
+      builder.MoveToElement (element).Perform ();
+    }
+
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+
+    var month = DescribedMonths[CurrentMonth - 2];
+    var year = CurrentYear;
+
+    driver.FindElement (By.Id ("idPeriodoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{month}']")).Click ();
+
+    driver.FindElement (By.Id ("idAnoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{year}']")).Click ();
+
+    driver.FindElement (By.Id ("idOrgaoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{Responsible}']")).Click ();
+
+    driver.FindElement (By.Id ("botaoGerarPendencia")).Click ();
+
+    wait.Until (e => e.FindElement (By.CssSelector (".swal2-title")).Text != "Gerando Pendências...");
+
+    var actualResult = wait.Until (e => e.FindElement (By.CssSelector (".swal2-title"))).Text;
+    var expectedResult = "Pendências Geradas com Sucesso";
+    StringAssert.AreEqualIgnoringCase (expectedResult, actualResult);
+
+  }
+
+  [Test, Order (2)]
+  public void ShouldReturnAnErrorMessageWhenInputValuesDoesNotHavePendencias () {
+
+    wait = new WebDriverWait (driver, new TimeSpan (0, 5, 0));
+    wait.IgnoreExceptionTypes (typeof (NoSuchElementException), typeof (InvalidOperationException));
+
+    driver.Navigate ().GoToUrl ("http://eapresfeature.tce.govrn/");
+
+    driver.FindElement (By.Id ("username")).Click ();
+    driver.FindElement (By.Id ("username")).SendKeys ("054.762.524-36");
+    driver.FindElement (By.Id ("password")).SendKeys ("dev@123");
+    driver.FindElement (By.Id ("idEntrarLogin")).Click ();
+    driver.FindElement (By.LinkText ("Monitoramento")).Click ();
+    driver.FindElement (By.Id ("pendencia")).Click (); {
+      var element = driver.FindElement (By.Id ("pendencia"));
+      Actions builder = new Actions (driver);
+      builder.MoveToElement (element).Perform ();
+    }
+
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+
+    var month = DescribedMonths[CurrentMonth - 2];
+    var year = CurrentYear;
+
+    driver.FindElement (By.Id ("idPeriodoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{month}']")).Click ();
+
+    driver.FindElement (By.Id ("idAnoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{year}']")).Click ();
+
+    driver.FindElement (By.Id ("idOrgaoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{Responsible}']")).Click ();
+
+    driver.FindElement (By.Id ("botaoGerarPendencia")).Click ();
+
+    wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
+
+    var actualResult = wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
+    var expectedResult = "Não há pendências a serem geradas desse grupo para essa obrigação no período informado!";
+    StringAssert.AreEqualIgnoringCase (expectedResult, actualResult);
+
+  }
+
+  [Test, Order (3)]
+  public void ShouldReturnAnErrorMessageWhenInputDateIsFuture () {
+
+    wait = new WebDriverWait (driver, new TimeSpan (0, 5, 0));
+    wait.IgnoreExceptionTypes (typeof (NoSuchElementException), typeof (InvalidOperationException));
+
+    driver.Navigate ().GoToUrl ("http://eapresfeature.tce.govrn/");
+
+    driver.FindElement (By.Id ("username")).Click ();
+    driver.FindElement (By.Id ("username")).SendKeys ("054.762.524-36");
+    driver.FindElement (By.Id ("password")).SendKeys ("dev@123");
+    driver.FindElement (By.Id ("idEntrarLogin")).Click ();
+    driver.FindElement (By.LinkText ("Monitoramento")).Click ();
+    driver.FindElement (By.Id ("pendencia")).Click (); {
+      var element = driver.FindElement (By.Id ("pendencia"));
+      Actions builder = new Actions (driver);
+      builder.MoveToElement (element).Perform ();
+    }
+
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+
+    var month = DescribedMonths[CurrentMonth + 1];
+    var year = CurrentYear;
+
+    driver.FindElement (By.Id ("idPeriodoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{month}']")).Click ();
+
+    driver.FindElement (By.Id ("idAnoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{year}']")).Click ();
+
+    driver.FindElement (By.Id ("idOrgaoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{Responsible}']")).Click ();
+
+    driver.FindElement (By.Id ("botaoGerarPendencia")).Click ();
+
+    wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
+
+    var actualResult = wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
+    var expectedResult = "Não é possível gerar pendências para datas futuras.";
+    StringAssert.AreEqualIgnoringCase (expectedResult, actualResult);
+
+  }
+
+  [Test, Order (4)]
+  public void ShouldGeneratePendenciasOrReturnAnErrorMessageDependingOfTheDate () {
+
+    wait = new WebDriverWait (driver, new TimeSpan (0, 5, 0));
+    wait.IgnoreExceptionTypes (typeof (NoSuchElementException), typeof (InvalidOperationException));
+
+    driver.Navigate ().GoToUrl ("http://eapresfeature.tce.govrn/");
+
+    driver.FindElement (By.Id ("username")).Click ();
+    driver.FindElement (By.Id ("username")).SendKeys ("054.762.524-36");
+    driver.FindElement (By.Id ("password")).SendKeys ("dev@123");
+    driver.FindElement (By.Id ("idEntrarLogin")).Click ();
+    driver.FindElement (By.LinkText ("Monitoramento")).Click ();
+    driver.FindElement (By.Id ("pendencia")).Click (); {
+      var element = driver.FindElement (By.Id ("pendencia"));
+      Actions builder = new Actions (driver);
+      builder.MoveToElement (element).Perform ();
+    }
+
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+
+    var month = DescribedMonths[CurrentMonth - 1];
+    var year = CurrentYear;
+
+    driver.FindElement (By.Id ("idPeriodoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{month}']")).Click ();
+
+    driver.FindElement (By.Id ("idAnoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{year}']")).Click ();
+
+    driver.FindElement (By.Id ("idOrgaoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{Responsible}']")).Click ();
+
+    driver.FindElement (By.Id ("botaoGerarPendencia")).Click ();
+
+    wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
+    
+    var actualResult = wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
+    var expectedResult = "";
+
+    if(CurrentDay > 20){
+      expectedResult = "Pendências Geradas com Sucesso";
+    } else {
+      expectedResult = "Não é possível gerar pendências antes do dia 21 para este mês.";
+    }
+
+    StringAssert.AreEqualIgnoringCase (expectedResult, actualResult);
+
+  }
+
 }
