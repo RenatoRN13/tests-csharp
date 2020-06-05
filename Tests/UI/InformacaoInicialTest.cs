@@ -53,6 +53,9 @@ public class InformacaoInicialTest {
       builder.MoveToElement(element).Perform();
     }
 
+    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
+    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
+
     wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/section/div[2]/div/div[3]/form/div[1]/table/tbody/tr[1]/td[2]")));
 
     wait.Until(e => e.FindElement(By.Id("selectStatusAutuacao"))).Click();
