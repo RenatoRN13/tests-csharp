@@ -174,4 +174,55 @@ public class PendenciaTest {
 
   }
 
+  [Test, Order (4)]
+  public void ShouldGeneratePendenciasOrReturnAnErrorMessageDependingOfTheDate () {
+
+    wait = new WebDriverWait (driver, new TimeSpan (0, 5, 0));
+    wait.IgnoreExceptionTypes (typeof (NoSuchElementException), typeof (InvalidOperationException));
+
+    driver.Navigate ().GoToUrl ("http://eapresfeature.tce.govrn/");
+
+    driver.FindElement (By.Id ("username")).Click ();
+    driver.FindElement (By.Id ("username")).SendKeys ("054.762.524-36");
+    driver.FindElement (By.Id ("password")).SendKeys ("dev@123");
+    driver.FindElement (By.Id ("idEntrarLogin")).Click ();
+    driver.FindElement (By.LinkText ("Monitoramento")).Click ();
+    driver.FindElement (By.Id ("pendencia")).Click (); {
+      var element = driver.FindElement (By.Id ("pendencia"));
+      Actions builder = new Actions (driver);
+      builder.MoveToElement (element).Perform ();
+    }
+
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+    wait.Until (SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy (By.XPath ("//*[@id='loading2'][contains(@style, 'display: none')]")));
+
+    var month = DescribedMonths[CurrentMonth - 1];
+    var year = CurrentYear;
+
+    driver.FindElement (By.Id ("idPeriodoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{month}']")).Click ();
+
+    driver.FindElement (By.Id ("idAnoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{year}']")).Click ();
+
+    driver.FindElement (By.Id ("idOrgaoBusca")).Click ();
+    driver.FindElement (By.XPath ($"//*[text()='{Responsible}']")).Click ();
+
+    driver.FindElement (By.Id ("botaoGerarPendencia")).Click ();
+
+    wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
+    
+    var actualResult = wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
+    var expectedResult;
+
+    if(CurrentDay > 20){
+      expectedResult = "Pendências Geradas com Sucesso";
+    } else {
+      expectedResult = "Não é possível gerar pendências antes do dia 21 para este mês.";
+    }
+
+    StringAssert.AreEqualIgnoringCase (expectedResult, actualResult);
+
+  }
+
 }
