@@ -66,15 +66,19 @@ public class ResponsavelPelaApuracaoTest {
     wait.Until(e => e.FindElement(By.Id("botaoCadastrar")));
 
     wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-responsavelapuracao-list/section/h1/a"))).Click();
-// document.querySelector("#botaoCadastrar")
+
+    var group = "Procuradoria Geral de Justiça";
+    var responsibility = "Siai DP";
+    var sector = "DDP - DIRETORIA DE DESPESA COM PESSOAL";
+
     driver.FindElement(By.Id("selectGrupoUnidadeJurisdicionada")).Click();
-    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-responsavelapuracao-form/div/div/form/fieldset/div[1]/div[1]/div/ng-select/ng-dropdown-panel/div/div[2]/div[2]/span"))).Click();
+    driver.FindElement (By.XPath ($"//*[text()='{group}']")).Click ();
 
     driver.FindElement(By.Id("selectObrigacao")).Click();
-    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-responsavelapuracao-form/div/div/form/fieldset/div[1]/div[2]/div/ng-select/ng-dropdown-panel/div/div[2]/div[3]/span"))).Click();
+    driver.FindElement (By.XPath ($"//*[text()='{responsibility}']")).Click ();
 
     driver.FindElement(By.Id("selectSetor")).Click();
-    wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-responsavelapuracao-form/div/div/form/fieldset/div[2]/div/div/ng-select/ng-dropdown-panel/div/div[2]/div[4]/span"))).Click();
+    driver.FindElement (By.XPath ($"//*[text()='{sector}']")).Click ();
 
     driver.FindElement(By.Id("idButtonSalvar")).Click();
 
