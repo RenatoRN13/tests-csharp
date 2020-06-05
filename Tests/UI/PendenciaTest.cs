@@ -20,11 +20,12 @@ public class PendenciaTest {
 
   // Datas for tests
   DateTime CurrentDate = DateTime.Now;
-  var CurrentYear = CurrentDate.Year;
-  var CurrentMonth = CurrentDate.Month;
-  var CurrentDay = CurrentDate.Day;
-  var DescribedMonths = new string[13] { "Zero", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
-  var Responsible = "Setor: DIRETORIA DE DESPESA COM PESSOAL | Obrigação: Siai DP | Grupo: Prefeitura Municipal";
+  
+  int CurrentYear;
+  int CurrentMonth;
+  int CurrentDay;
+  string[] DescribedMonths;
+  string Responsible;
 
   [SetUp]
   public void SetUp () {
@@ -34,6 +35,12 @@ public class PendenciaTest {
 
     js = (IJavaScriptExecutor) driver;
     vars = new Dictionary<string, object> ();
+
+    CurrentYear = CurrentDate.Year;
+    CurrentMonth = CurrentDate.Month;
+    CurrentDay = CurrentDate.Day;
+    DescribedMonths = new string[13] { "Zero", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
+    Responsible = "Setor: DIRETORIA DE DESPESA COM PESSOAL | Obrigação: Siai DP | Grupo: Prefeitura Municipal";
   }
 
   [TearDown]
@@ -213,7 +220,7 @@ public class PendenciaTest {
     wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li")));
     
     var actualResult = wait.Until (e => e.FindElement (By.XPath ("/html/body/app-root/app-dashboard/div/div/main/app-pendencia-list/tce-server-error-messages/div/ul/li"))).Text;
-    var expectedResult;
+    var expectedResult = "";
 
     if(CurrentDay > 20){
       expectedResult = "Pendências Geradas com Sucesso";
