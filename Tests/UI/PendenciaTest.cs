@@ -11,6 +11,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using UI.PageObjects;
+
 [TestFixture]
 public class PendenciaTest {
   private IWebDriver driver;
@@ -57,10 +59,9 @@ public class PendenciaTest {
 
     driver.Navigate ().GoToUrl ("http://eapresfeature.tce.govrn/");
 
-    driver.FindElement (By.Id ("username")).Click ();
-    driver.FindElement (By.Id ("username")).SendKeys ("054.762.524-36");
-    driver.FindElement (By.Id ("password")).SendKeys ("dev@123");
-    driver.FindElement (By.Id ("idEntrarLogin")).Click ();
+    LoginTCE login = new LoginTCE("054.762.524-36", "dev@123");
+    login.join();
+
     driver.FindElement (By.LinkText ("Monitoramento")).Click ();
     driver.FindElement (By.Id ("pendencia")).Click (); {
       var element = driver.FindElement (By.Id ("pendencia"));
