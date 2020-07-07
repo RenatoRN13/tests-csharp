@@ -55,10 +55,7 @@ public class ResponsavelPelaApuracaoTest {
     wait.Until(e => e.FindElement(By.Id("responsavelApuracao"))).Click();
     
     wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-    //ElementIsVisible(By.Id("content-section")));
-
-    // driver.wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='loading2'][contains(@style, 'display: none')]")));
-
+    
     wait.Until(e => e.FindElement(By.Id("botaoCadastrar")));
 
     wait.Until(e => e.FindElement(By.XPath("/html/body/app-root/app-dashboard/div/div/main/app-responsavelapuracao-list/section/h1/a"))).Click();
@@ -67,16 +64,8 @@ public class ResponsavelPelaApuracaoTest {
     var responsibility = "Siai DP";
     var sector = "DDP - DIRETORIA DE DESPESA COM PESSOAL";
 
-    driver.FindElement(By.Id("selectGrupoUnidadeJurisdicionada")).Click();
-    driver.FindElement (By.XPath ($"//*[text()='{group}']")).Click ();
-
-    driver.FindElement(By.Id("selectObrigacao")).Click();
-    driver.FindElement (By.XPath ($"//*[text()='{responsibility}']")).Click ();
-
-    driver.FindElement(By.Id("selectSetor")).Click();
-    driver.FindElement (By.XPath ($"//*[text()='{sector}']")).Click ();
-
-    driver.FindElement(By.Id("idButtonSalvar")).Click();
+    ResponsavelPelaApuracaoPO responsavelPO = new ResponsavelPelaApuracaoPO(group, responsibility, sector);
+    responsavelPO.register();
 
     wait.Until(e => e.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]")));
     var actualResult = driver.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div[1]")).Text;
