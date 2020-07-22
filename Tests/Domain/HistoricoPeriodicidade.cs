@@ -7,7 +7,7 @@ namespace Domain.Entities
     public class HistoricoPeriodicidade
     {
         private HistoricoPeriodicidade() {}
-        public HistoricoPeriodicidade(int idHistoricoPeriodicidade, int idObrigacao, int periodicidade, string tipoPeriodicidade, DateTime dataInicio, DateTime? dataFinal, string justificativa)
+        public HistoricoPeriodicidade(int idHistoricoPeriodicidade, int idObrigacao, int periodicidade, string tipoPeriodicidade, int diasCarencia, DateTime dataInicio, DateTime? dataFinal, string justificativa)
         {
             IdHistoricoPeriodicidade = idHistoricoPeriodicidade;
             IdObrigacao = idObrigacao;
@@ -16,6 +16,7 @@ namespace Domain.Entities
             DataInicio = dataInicio;
             DataFinal = dataFinal;
             Justificativa = justificativa;
+            DiasCarencia = diasCarencia;
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -23,6 +24,7 @@ namespace Domain.Entities
         public int IdObrigacao { get; set; }
         public int Periodicidade { get; set; }
         public string TipoPeriodicidade { get; set; }
+        public int DiasCarencia { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime? DataFinal { get; set; }
         public string Justificativa { get; set; }

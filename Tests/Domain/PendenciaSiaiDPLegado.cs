@@ -9,21 +9,26 @@ namespace Domain.Entities
 {
     public class PendenciaSiaiDPLegado : Pendencia
     {
-        public PendenciaSiaiDPLegado(Orgao orgao, int ano, Byte mes, ResponsavelApuracao responsavelApuracao): base(orgao, ano, mes, responsavelApuracao) {
-            // TODO Colocar chamda em um metodo para gerar a pendencia
-            //this.SetDataEnvioObrigacao();
-        }
+        public PendenciaSiaiDPLegado(Orgao orgao, 
+                                     int ano, 
+                                     Byte mes, 
+                                     ResponsavelApuracao responsavelApuracao): base(orgao, ano, mes, responsavelApuracao) { }
         
+        //TODO: Criar interface para esses metodos
         protected override void SetDataEnvioObrigacao(){
-            Remessa envioArquivoSiaiDP = this.Orgao.InformacoesEnviadas.Find(x => x.ObrigacaoTipoEnvio == EObrigacaoTipoEnvio.ENVIO_ARQUIVO_SIAI_DP_LEGADO).Remessa;
+            InformacaoEnviada informacaoEnviada = this.Orgao.InformacoesEnviadas.Find(x => x.ObrigacaoTipoEnvio == EObrigacaoTipoEnvio.ENVIO_ARQUIVO_SIAI_DP_LEGADO);
+            Remessa envioArquivoSiaiDP = informacaoEnviada != null ? informacaoEnviada.Remessa : null;
             if(envioArquivoSiaiDP != null)
                 this.DataEnvioObrigacao = envioArquivoSiaiDP.DataInclusao;
         }
 
-        public override void SetResponsaveis()
+        protected override void SetResponsaveis()
         {
-            Remessa folhaPagamentoSiaiDP = this.Orgao.InformacoesEnviadas.Find(x => x.ObrigacaoTipoEnvio == EObrigacaoTipoEnvio.FOLHA_PAGAMENTO_SIAI_DP_LEGADO).Remessa;
-            Remessa quadroPessoalSiaiDP = this.Orgao.InformacoesEnviadas.Find(x => x.ObrigacaoTipoEnvio == EObrigacaoTipoEnvio.QUADRO_PESSOAL_SIAI_DP_LEGADO).Remessa;
+            InformacaoEnviada informacaoEnviadaFolhaPagamento = this.Orgao.InformacoesEnviadas.Find(x => x.ObrigacaoTipoEnvio == EObrigacaoTipoEnvio.FOLHA_PAGAMENTO_SIAI_DP_LEGADO);
+            Remessa folhaPagamentoSiaiDP = informacaoEnviadaFolhaPagamento != null ? informacaoEnviadaFolhaPagamento.Remessa : null;
+            
+            InformacaoEnviada informacaoEnviadaQuadroPessoal = this.Orgao.InformacoesEnviadas.Find(x => x.ObrigacaoTipoEnvio == EObrigacaoTipoEnvio.QUADRO_PESSOAL_SIAI_DP_LEGADO);
+            Remessa quadroPessoalSiaiDP = informacaoEnviadaQuadroPessoal != null ? informacaoEnviadaQuadroPessoal.Remessa : null;
             
             if(folhaPagamentoSiaiDP != null){
                 this.NomeResponsavelRemessa = folhaPagamentoSiaiDP.renome;
@@ -35,6 +40,8 @@ namespace Domain.Entities
                 this.CpfResponsavelRemessa = quadroPessoalSiaiDP.recpf;
                 this.NomeDestinatarioComunicacao = quadroPessoalSiaiDP.rgnome;
                 this.CpfNomeDestinatarioComunicacao = quadroPessoalSiaiDP.rgcpf;
+            } else {
+                return;
             }
 
             if(!folhaPagamentoSiaiDP.rgcpf.Equals(quadroPessoalSiaiDP.rgcpf) && folhaPagamentoSiaiDP.rgcpf != null && quadroPessoalSiaiDP.rgcpf != null){
@@ -43,16 +50,6 @@ namespace Domain.Entities
                 this.NomeDestinatarioComunicacao = folhaPagamentoSiaiDP.rgnome.TrimEnd () + ", CPF: " + folhaPagamentoSiaiDP.rgnome;
                 this.NomeDestinatarioComunicacao += (" | " + quadroPessoalSiaiDP.rgnome.TrimEnd () + ", CPF: " + quadroPessoalSiaiDP.rgcpf);
             }
-        }
-
-        public override bool VerificarSeExistePendenciaDoOrgao()
-        {
-            InformacaoEnviada informacaoEnviada = this.Orgao.InformacoesEnviadas.Find(x => x.ObrigacaoTipoEnvio == EObrigacaoTipoEnvio.ENVIO_ARQUIVO_SIAI_DP_LEGADO);
-            
-            if(informacaoEnviada == null || informacaoEnviada.Remessa.DataInclusao > this.ResponsavelApuracao.Obrigacao.GetDataVencimento(this.Ano, this.Mes)){
-                return true;
-            }
-            return false;
         }
     }
 }

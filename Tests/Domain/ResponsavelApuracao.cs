@@ -9,8 +9,7 @@ namespace Domain.Entities
 {
     public class ResponsavelApuracao
     {
-        private ResponsavelApuracao() { }
-        public ResponsavelApuracao(Obrigacao obrigacao) { this.Obrigacao = obrigacao; }
+        public ResponsavelApuracao() { }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdResponsavelApuracao { get; set; }
@@ -22,6 +21,8 @@ namespace Domain.Entities
         public DateTime? DataInativacao { get; set; }
         public DateTime DataInclusao { get; set; }
         public virtual Obrigacao Obrigacao { get; set; }
+        
+        [NotMapped]
         public virtual GrupoUnidadeJurisdicionada GrupoUnidadeJurisdicionada { get; private set; }
 
         public void SetGrupoUnidadeJurisdionada(GrupoUnidadeJurisdicionada grupoUnidadeJurisdicionada) {
