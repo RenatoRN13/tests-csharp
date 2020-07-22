@@ -9,7 +9,7 @@ using Domain.ValueObjects;
 
 namespace Domain.Entities
 {
-    public abstract class Pendencia
+    public class Pendencia
     {
         private Pendencia(){
             this.Status = EPendenciaStatus.NOVA;
@@ -23,12 +23,9 @@ namespace Domain.Entities
             this.NomeOrgao = orgao.NomeOrgao;
             this.Ano = ano;
             this.Mes = mes;
-            this.ResponsavelApuracao = responsavelApuracao;
             this.IdResponsavelApuracao = responsavelApuracao.IdResponsavelApuracao;
             this.DescricaoAutuacao = responsavelApuracao.Obrigacao.DescricaoAutuacao;
             
-            // TODO Colocar chamda em um metodo para gerar a pendencia
-            // this.ValorMulta = responsavelApuracao.Obrigacao.GetValorMultaVigente();
             this.Observacao = "Pendência Gerada Automaticamente, em: " + DateTime.Now + ".";
         }
 
@@ -60,13 +57,12 @@ namespace Domain.Entities
         public Boolean DespachoDiretor { get; set; }
         public DateTime? DataEnvioObrigacao { get; set; }
         public virtual ResponsavelApuracao ResponsavelApuracao { get; set; }
+        
+        [NotMapped]
         public virtual Orgao Orgao { get; set; }
 
         [NotMapped]
         public virtual EPendenciaStatus Status { get; set; }
-        public abstract void SetResponsaveis();
-        protected abstract void SetDataEnvioObrigacao();
-
         public Boolean Comparar(Pendencia pendencia){
             if(this.IdOrgao == pendencia.IdOrgao &&
                 this.Mes == pendencia.Mes &&
@@ -90,11 +86,15 @@ namespace Domain.Entities
                 if(this.Comparar(pendenciaJaCadastrada) == true){
                     if(this.IdentificarSePendenciaPrecisaSerAtualizada(pendenciaJaCadastrada)){
                         this.IdPendencia = pendenciaJaCadastrada.IdPendencia;
+                        this.IdSessao = pendenciaJaCadastrada.IdSessao;
+                        this.DataInclusao = pendenciaJaCadastrada.DataInclusao;
+
                         this.Status = EPendenciaStatus.A_SER_ATUALIZADA;
+                        break;
                     }
                     else {
                         this.Status = EPendenciaStatus.JA_CADASTRADA;
-                        return ;
+                        break;
                     }
                 }
             }
@@ -120,7 +120,16 @@ namespace Domain.Entities
 
         }
 
-        public abstract bool VerificarSeExistePendenciaDoOrgao();
+        public void SetInformacoes(Obrigacao obrigacao) {
+            this.SetResponsaveis();
+            this.SetDataEnvioObrigacao();
+            this.SetValorMulta(obrigacao);
+        }
 
+        protected void SetValorMulta(Obrigacao obrigacao){
+            this.ValorMulta = obrigacao.GetValorMultaVigente();
+        }
+        protected virtual void SetResponsaveis() {}
+        protected virtual void SetDataEnvioObrigacao() {}
     }
 }

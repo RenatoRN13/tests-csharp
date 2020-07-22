@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.DTO;
 using Domain.Enum;
 using Domain.ValueObjects;
 
@@ -9,7 +10,21 @@ namespace Domain.Entities
 {
     public class Obrigacao
     {
-        public Obrigacao() {
+        public Obrigacao () {
+
+        }
+
+        protected Obrigacao(byte tipoObrigacao, 
+                            string nomeObrigacao, 
+                            List<HistoricoPeriodicidade> listaHistoricoPeriodicidade, 
+                            List<HistoricoValorMulta> listaHistoricoValorMulta, 
+                            List<Rota> rotas)
+        {
+            TipoObrigacao = tipoObrigacao;
+            NomeObrigacao = nomeObrigacao;
+            ListaHistoricoPeriodicidade = listaHistoricoPeriodicidade;
+            ListaHistoricoValorMulta = listaHistoricoValorMulta;
+            Rotas = rotas;
         }
 
         public int IdObrigacao { get; set; }
@@ -27,24 +42,6 @@ namespace Domain.Entities
         [NotMapped]
         public virtual List<Rota> Rotas { get; private set; }
 
-        public void AdicionarRota(EObrigacaoTipoEnvio eObrigacaoTipoEnvio, string url){
-            this.Rotas.Add(new Rota(eObrigacaoTipoEnvio, url));
-        }
-
-        public void InicializarRotas(){
-            switch (this.TipoObrigacao)
-            {
-                case (Byte) ETipoObrigacao.SIAI_DP_LEGADO:
-                    this.AdicionarRota(EObrigacaoTipoEnvio.ENVIO_ARQUIVO_SIAI_DP_LEGADO, "PEGAR URL DA ROTA NO APPSETTINGS");
-                    this.AdicionarRota(EObrigacaoTipoEnvio.FOLHA_PAGAMENTO_SIAI_DP_LEGADO, "PEGAR URL DA ROTA NO APPSETTINGS");
-                    this.AdicionarRota(EObrigacaoTipoEnvio.QUADRO_PESSOAL_SIAI_DP_LEGADO, "PEGAR URL DA ROTA NO APPSETTINGS");
-                    break;
-                case (Byte) ETipoObrigacao.SIAI_DP:
-                default:
-                    throw new ValidationException("Obrigação inválida.");
-            }
-        }
-
         public Decimal GetValorMultaVigente(){
             var hoje = DateTime.Now;
             HistoricoValorMulta objetoValorMultaVigente = this.ListaHistoricoValorMulta.Find(x => (hoje >= x.DataInicio)  && (hoje <= x.DataFinal || x.DataFinal == null));
@@ -55,7 +52,7 @@ namespace Domain.Entities
             return objetoValorMultaVigente.ValorMulta;
         }
 
-        public HistoricoPeriodicidade GetPeriodicidadeVigente(){
+        public virtual HistoricoPeriodicidade GetPeriodicidadeVigente(){
             var hoje = DateTime.Now;
             HistoricoPeriodicidade objetoPeriodoVigente = this.ListaHistoricoPeriodicidade.Find(x => (hoje >= x.DataInicio)  && (hoje <= x.DataFinal || x.DataFinal == null));
             
@@ -65,42 +62,49 @@ namespace Domain.Entities
             return objetoPeriodoVigente;
         }
 
-        public DateTime? GetDataVencimento(int anoMonitorado, int mesMonitorado) {
-            // Fixado dia 20 para as obrigações da DDP
-            int diasDeCarencia = 20;
+        public virtual DateTime? GetDataVencimento(int mesMonitorado, int anoMonitorado) {
 
-            HistoricoPeriodicidade historicoPeriodicidade = this.GetPeriodicidadeVigente();
+            HistoricoPeriodicidade historicoPeriodicidadeVigente = this.GetPeriodicidadeVigente();
             DateTime dataMonitoramento = new DateTime (anoMonitorado, mesMonitorado, DateTime.DaysInMonth(anoMonitorado, mesMonitorado));
             DateTime primeiroDiaDoAno = new DateTime(anoMonitorado, 1, 1);
 
             DateTime? dataDeVencimento = null;
+
+            int diasDeCarencia = historicoPeriodicidadeVigente.DiasCarencia;
             
-            switch (historicoPeriodicidade.TipoPeriodicidade) {
+            switch (historicoPeriodicidadeVigente.TipoPeriodicidade) {
                 // case "D":
                 //     for (DateTime dataVencimentoObrigacao = primeiroDiaDoAno; dataVencimentoObrigacao <= dataMonitoramento; dataVencimentoObrigacao = dataVencimentoObrigacao.AddMonths (historicoPeriodicidade.Periodicidade)) {
                 //         if (dataVencimentoObrigacao.Day == dataMonitoramento.Day) {
-                //             dataDeVencimento = dataVencimentoObrigacao.AddDays(diasDeCarencia); //FIXME: historicoPeriodicidade.DiasDeCarencia
+                //             dataDeVencimento = dataVencimentoObrigacao.AddDays(diasDeCarencia); 
                 //         }   
                 //     }
                 //     break;
                 case "M":
-                    for(int mes = historicoPeriodicidade.Periodicidade; mes <= 12; mes += historicoPeriodicidade.Periodicidade){
+                    for(int mes = historicoPeriodicidadeVigente.Periodicidade; mes <= 12; mes += historicoPeriodicidadeVigente.Periodicidade){
                         if(mes == mesMonitorado){
-                            //TODO: adicionar campo DiasDeCarencia em historicoPeriodicidade.
-                            dataDeVencimento = new DateTime (anoMonitorado, mesMonitorado, DateTime.DaysInMonth(anoMonitorado, mesMonitorado)).AddDays(diasDeCarencia);
+                            dataDeVencimento = new DateTime (anoMonitorado, mesMonitorado, DateTime.DaysInMonth(anoMonitorado, mesMonitorado), 23, 59, 59).AddDays(diasDeCarencia);
                         }
                     }
                     break;
                 case "A":
                     if(mesMonitorado == 12) {
-                        //TODO: adicionar campo DiasDeCarencia em historicoPeriodicidade.
-                        var ultimoDiaDoAnoAnalisado =  new DateTime (anoMonitorado, 12, 31);
+                        var ultimoDiaDoAnoAnalisado =  new DateTime (anoMonitorado, 12, 31, 23, 59, 59); 
                         dataDeVencimento = ultimoDiaDoAnoAnalisado.AddDays(diasDeCarencia);
                     }
                     break;
             }
-
             return dataDeVencimento;
+        }
+
+        public virtual bool VerificarSeExisteDebitoDoOrgao(Orgao orgao, DadosMonitoramentoDTO dadosMonitoramentoDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void ValidarMonitoramento(int mes, int ano)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
     public class GrupoUnidadeJurisdicionada
     {
+        private GrupoUnidadeJurisdicionada() {}
         public GrupoUnidadeJurisdicionada(byte idGrupoUnidadeJurisdicionada, 
                                           List<Orgao> orgaos)
         {

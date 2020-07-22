@@ -4,6 +4,7 @@ using System;
 using Domain.Enum;
 using Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
@@ -22,9 +23,10 @@ namespace Domain.Entities
         public virtual List<InformacaoEnviada> InformacoesEnviadas { get; private set; }
 
         public void SetInformacoesEnviadas(EObrigacaoTipoEnvio eObrigacaoTipoEnvio, List<Remessa> remessas){
-            foreach (Remessa remessa in remessas)
-            {
-                if(this.CodigoOrgao.Trim().Equals(remessa.CodigoOrgao.Trim()) || this.IdOrgao == remessa.IdOrgao){
+            if(this.InformacoesEnviadas == null)
+                this.InformacoesEnviadas = new List<InformacaoEnviada>();
+            foreach (Remessa remessa in remessas) {
+                if(this.IdOrgao == remessa.IdOrgao || (remessa.CodigoOrgao != null && this.CodigoOrgao.Trim().Equals(remessa.CodigoOrgao.Trim()))){
                     this.InformacoesEnviadas.Add(new InformacaoEnviada(eObrigacaoTipoEnvio, remessa));
                 }
             }

@@ -13,17 +13,16 @@ namespace Tests.Domain.Entities {
 
         [SetUp]
         public void Init () {
-            obrigacao = new Obrigacao();
-            historicoPeriodicidadeEsperado = new HistoricoPeriodicidade (2, 1, 3, "M", new DateTime (2020, 6, 30), new DateTime (2020, 7, 30), "Segunda Periodicidade");
-
+            obrigacao = new ObrigacaoSiaiDPLegado(1, "obrigacao", null, null, null);
+            historicoPeriodicidadeEsperado = new HistoricoPeriodicidade (2, 1, 3, "M", 20, new DateTime (2020, 6, 30), new DateTime (2020, 7, 30), "Segunda Periodicidade");
         }
 
         [Test]
         public void Deve_retornar_o_historico_periodicidade_vigente_da_obrigacao () {
             List<HistoricoPeriodicidade> listaDePeriodicidade = new List<HistoricoPeriodicidade> ();
-            listaDePeriodicidade.Add (new HistoricoPeriodicidade (1, 1, 2, "M", new DateTime (2020, 1, 1), new DateTime (2020, 6, 30), "Primeira Periodicidade"));
-            listaDePeriodicidade.Add (new HistoricoPeriodicidade (2, 1, 3, "M", new DateTime (2020, 6, 30), new DateTime (2020, 7, 30), "Segunda Periodicidade"));
-            listaDePeriodicidade.Add (new HistoricoPeriodicidade (3, 1, 4, "M", new DateTime (2020, 7, 31), null, "Terceira Periodicidade"));
+            listaDePeriodicidade.Add (new HistoricoPeriodicidade (1, 1, 2, "M", 20, new DateTime (2020, 1, 1), new DateTime (2020, 6, 30), "Primeira Periodicidade"));
+            listaDePeriodicidade.Add (new HistoricoPeriodicidade (2, 1, 3, "M", 20, new DateTime (2020, 6, 30), new DateTime (2020, 7, 30), "Segunda Periodicidade"));
+            listaDePeriodicidade.Add (new HistoricoPeriodicidade (3, 1, 4, "M", 20, new DateTime (2020, 7, 31), null, "Terceira Periodicidade"));
 
             obrigacao.ListaHistoricoPeriodicidade = listaDePeriodicidade;
 
@@ -35,8 +34,8 @@ namespace Tests.Domain.Entities {
         [Test]
         public void Deve_lancar_uma_excecao_caso_nao_existe_historico_periodicidade_vigente () {
             List<HistoricoPeriodicidade> listaDePeriodicidade = new List<HistoricoPeriodicidade> ();
-            listaDePeriodicidade.Add (new HistoricoPeriodicidade (1, 1, 2, "M", new DateTime (2020, 1, 1), new DateTime (2020, 6, 30), "Primeira Periodicidade"));
-            listaDePeriodicidade.Add (new HistoricoPeriodicidade (3, 1, 4, "M", new DateTime (2020, 7, 31), null, "Terceira Periodicidade"));
+            listaDePeriodicidade.Add (new HistoricoPeriodicidade (1, 1, 2, "M", 20, new DateTime (2020, 1, 1), new DateTime (2020, 6, 30), "Primeira Periodicidade"));
+            listaDePeriodicidade.Add (new HistoricoPeriodicidade (3, 1, 4, "M", 20, new DateTime (2020, 7, 31), null, "Terceira Periodicidade"));
 
             obrigacao.ListaHistoricoPeriodicidade = listaDePeriodicidade;
 
